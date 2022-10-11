@@ -1,0 +1,3 @@
+cd ..
+scons -c
+cd bin
