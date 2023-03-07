@@ -1,6 +1,7 @@
-#include "pch.h"
-#include "gl/shader.h"
-#include "vendor/stb_image.h"
+#include "glad/gl.h"
+#include "stb/stb_image.h"
+#include <GLFW/glfw3.h>
+#include <cstdio>
 
 int window_w = 1280;
 int window_h = 720;
@@ -52,7 +53,7 @@ int main(void)
     glfwMakeContextCurrent(window);
 
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGL(glfwGetProcAddress))
         return -1;
 
     std::printf("%s\n", glGetString(GL_VERSION));
@@ -102,8 +103,6 @@ int main(void)
     int x, y, bpp;
     pImg = stbi_load("textures/heit.png", &x, &y, &bpp, 4);
 
-    std::cout << bpp;
-
     unsigned int name;
     glCreateTextures(GL_TEXTURE_2D, 1, &name);
 
@@ -117,15 +116,6 @@ int main(void)
     glGenerateTextureMipmap(name);
 
     stbi_image_free(pImg);
-
-
-    Shader test;
-    test.Compile(ParseShader("shaders/debug.shader"));
-    test.Use();
-
-    
-    // glm::mat4 proj = glm::perspective(glm::radians(45.f), (float)1280/(float)720, 0.1f, 100.0f);
-    glm::mat4 view = glm::mat4(1.0f);
 
 
     float delta = 0.0f;
@@ -142,31 +132,6 @@ int main(void)
         delta = currentFrameTime - previousFrameTime;
         previousFrameTime = currentFrameTime;
 
-        if(r > 1.0f)
-            increment = -0.5f;
-        else if(r < 0.0f)
-            increment = 0.5f;
-
-        r += increment * delta;
-
-        double px, py;
-
-        glfwGetCursorPos(window, &px, &py);
-
-        glm::mat4 proj = glm::ortho(0.0f, (float)window_w, 0.0f, (float)window_h, -1.0f, 1.0f);
-
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(px, -py + window_h, 0));
-        model = glm::scale(model, glm::vec3(sz, sz, 0));
-
-        glm::mat4 mvp = proj * view;
-        test.SetMat4("u_ViewProj", mvp);
-        test.SetMat4("u_Transform", model);
-        
-        test.SetVec4("u_Color", r, 0.3f, 0.8f, 1.0f);
-        
-        glBindTextureUnit(0, name);
-        test.SetInt("u_Texture", 0);
-
         glBindVertexArray(va);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
@@ -178,4 +143,3 @@ int main(void)
     glfwTerminate();
     return 0;
 }
-

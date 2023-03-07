@@ -1,4 +1,5 @@
 cd ..
-scons
+premake5 gmake
+make
 cd bin
 ./app
