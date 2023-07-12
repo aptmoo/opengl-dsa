@@ -1,28 +1,57 @@
-workspace "mercury"
-   configurations { "Debug", "Release" }
+workspace "opengl"
+    configurations { "Debug", "Release" }
 
-project "app"
-   kind "ConsoleApp"
-   language "C++"
-   targetdir "bin/"
+project "App"
+    -- Input
+    files
+    {
+        "src/**.h", "src/**.cpp"
+    }
 
-   includedirs {"src/", "include/", "src/ext/"}
+    includedirs
+    {
+        "src/",
+        "ext/glad/include",
+        "ext/"
+    }
 
-   filter { "system:linux", "action:gmake" }
-      buildoptions { "--std=gnu++17 -Winvalid-pch" }
-      libdirs {"lib/", "/usr/lib/"}
+    -- Preprocessor
+    defines { "GLFW_INCLUDE_NONE" }
 
+    -- Linker
+    links { "glad" }
 
-   links { "glfw", "GL", "dl", "pthread" }
+    filter { "system:linux" }
+        links { "glfw", "GL" }
+        libdirs { "/usr/bin", "lib/" }
+    filter {}
 
-   defines { "GLFW_INCLUDE_NONE" }
+    -- Language
+    language    "C++"
+    cppdialect  "GNU++17"
 
-   files { "src/**.cpp", "src/**.c" }
+    -- Compiler
+    filter { "system:linux" }
+        toolset "clang" 
+    filter {}
 
-   filter "configurations:Debug"
-      defines { "DEBUG" }
-      symbols "On"
+    -- Output
+    targetname  "App.out"
+    targetdir   "bin/"
+    objdir      "bin-int/"
+    kind        "ConsoleApp"
 
-   filter "configurations:Release"
-      defines { "NDEBUG" }
-      optimize "On"
+    -- Config 
+    filter { "configurations:Debug" }
+        defines { "DEBUG" }
+        symbols "On"
+    filter{}
+
+    filter { "configurations:Release" }
+        defines { "NDEBUG" }
+        optimize "On"
+    filter{}
+
+include "ext"
+
+include "ext"
