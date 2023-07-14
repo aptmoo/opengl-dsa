@@ -38,4 +38,26 @@ public:
     u32 m_glID;
 };
 
+class GLIndexBuffer : public IndexBuffer
+{
+public:
+    /**
+     * @brief Constructor. see Create() on the base class.
+     * 
+     * @param data 
+     * @param data_size 
+     */
+    GLIndexBuffer(const void* data, u32 data_size);
+
+    /**
+     * @brief Destructor. 
+     * Deletes buffer on the GPU.
+     * 
+     */
+    virtual ~GLIndexBuffer();
+    
+// private:
+    u32 m_glID;
+};
+
 #endif

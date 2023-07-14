@@ -23,7 +23,7 @@ project "App"
 
     filter { "system:linux" }
         links { "glfw", "GL" }
-        libdirs { "/usr/bin", "%{wks.location}lib/" }
+        libdirs { "/usr/bin", "%{wks.location}/lib/" }
     filter {}
 
     -- Language
@@ -38,7 +38,7 @@ project "App"
     -- Output
     targetname  "App.out"
     targetdir   "%{wks.location}/bin/"
-    objdir      "%{wks.location}bin-int/"
+    objdir      "%{wks.location}/bin-int/"
     kind        "ConsoleApp"
 
     -- Config 

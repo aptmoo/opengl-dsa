@@ -92,13 +92,15 @@ int main(int argc, char const *argv[])
         -0.5f, -0.5f, 0.0f,  // bottom left
         -0.5f,  0.5f, 0.0f   // top left 
     };
+    
     unsigned int indices[] = 
     {  // note that we start from 0!
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
-    };  
-    
-    Ref<VertexBuffer> vertexbuffer = VertexBuffer::Create(&vertices, sizeof(float) * 3 * 4);
+    };
+
+    Ref<VertexBuffer> vertexbuffer = VertexBuffer::Create(0);
+    vertexbuffer->SetData(&vertices, sizeof(float) * 3 * 4);
 
     unsigned int vbuf, ibuf, varr;
     GLVertexBuffer* buf_internal = (GLVertexBuffer*)(vertexbuffer.get());
@@ -106,7 +108,7 @@ int main(int argc, char const *argv[])
 
     glCreateBuffers(1, &ibuf);
     glNamedBufferStorage(ibuf, sizeof(unsigned int) * 2 * 3, &indices, GL_DYNAMIC_STORAGE_BIT);
-
+    
     glCreateVertexArrays(1, &varr);
     glVertexArrayVertexBuffer(varr, 0, vbuf, 0, 3 * sizeof(float));
     glVertexArrayElementBuffer(varr, ibuf);
