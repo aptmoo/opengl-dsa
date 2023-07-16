@@ -102,12 +102,13 @@ int main(int argc, char const *argv[])
     Ref<VertexBuffer> vertexbuffer = VertexBuffer::Create(0);
     vertexbuffer->SetData(&vertices, sizeof(float) * 3 * 4);
 
+    Ref<IndexBuffer> indexbuffer = IndexBuffer::Create(&indices, sizeof(unsigned) * 2 * 3);
+
     unsigned int vbuf, ibuf, varr;
     GLVertexBuffer* buf_internal = (GLVertexBuffer*)(vertexbuffer.get());
     vbuf = buf_internal->m_glID;    // hacks
-
-    glCreateBuffers(1, &ibuf);
-    glNamedBufferStorage(ibuf, sizeof(unsigned int) * 2 * 3, &indices, GL_DYNAMIC_STORAGE_BIT);
+    GLIndexBuffer *ibuf_internal = (GLIndexBuffer *)(indexbuffer.get());
+    ibuf = ibuf_internal->m_glID; // hacks
     
     glCreateVertexArrays(1, &varr);
     glVertexArrayVertexBuffer(varr, 0, vbuf, 0, 3 * sizeof(float));
@@ -127,6 +128,8 @@ int main(int argc, char const *argv[])
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    
+    glDeleteProgramPipelines(1, &pr);
 
 
     glfwTerminate();
