@@ -1,6 +1,7 @@
 #ifndef GFX_BUFFER_H
 #define GFX_BUFFER_H
 #include "common/types.h"
+#include <vector>
 
 enum class BufferElementType
 {
@@ -34,6 +35,64 @@ static usize BufferElementTypeSize(const BufferElementType type)
     }
 }
 
+/**
+ * @brief Get the amount of components of a certain type.
+ * 
+ * @param type 
+ * @return usize 
+ */
+static usize BufferElementComponentCount(const BufferElementType type)
+{
+    switch (type)
+    {
+    case BufferElementType::FLOAT:  return 1;
+    case BufferElementType::FLOAT2: return 1 * 2;
+    case BufferElementType::FLOAT3: return 1 * 3;
+    case BufferElementType::FLOAT4: return 1 * 4;
+    case BufferElementType::INT:    return 1;
+    case BufferElementType::INT2:   return 1 * 2;
+    case BufferElementType::INT3:   return 1 * 3;
+    case BufferElementType::INT4:   return 1 * 4;
+    case BufferElementType::MAT4:   return 1 * 4 * 4;
+    case BufferElementType::BOOL:   return 1;
+    case BufferElementType::NONE:   return 1;
+    default: return 0;  // Catastrophic failure! 
+    }
+}
+
+struct VertexBufferElement
+{
+    BufferElementType Type;
+    u32 Size;
+    bool Normalized;
+
+    VertexBufferElement(BufferElementType type, u32 size, bool normalized = false)
+        : Type(type), Size(size), Normalized(normalized)
+    {}
+};
+
+struct VertexBufferLayout
+{
+    /**
+     * @brief Add an element to this layout.
+     * 
+     * @param type 
+     * @param normalized 
+     */
+    void AddElement(BufferElementType type, bool normalized = false);
+
+    /**
+     * @brief Get the internal elements vector.
+     * 
+     * @return const std::vector<VertexBufferElement> 
+     */
+    inline const std::vector<VertexBufferElement> GetElements() { return m_Elements; }
+
+private:
+    usize m_Stride;
+    std::vector<VertexBufferElement> m_Elements;
+};
+
 class VertexBuffer
 {
 public:
@@ -53,6 +112,22 @@ public:
      * @param data_size The physical size of that data.
      */
     virtual void SetData(const void* data, u32 data_size) = 0;
+
+
+    /**
+     * @brief Get the internal layout. This layout must be private in a implementation subclass.
+     * This is done to avoid making "brittle bases".
+     * 
+     * @return const VertexBufferLayout& 
+     */
+    virtual const VertexBufferLayout& GetLayout();
+
+    /**
+     * @brief Set the layout of this buffer.
+     * 
+     * @param layout 
+     */
+    virtual void SetLayout(const VertexBufferLayout& layout);
 
     /* Creation functions */
     /**
