@@ -14,7 +14,7 @@ enum class BufferElementType
  * @param type 
  * @return usize 
  */
-static usize BufferElementTypeSize(const BufferElementType type)
+static u32 BufferElementTypeSize(const BufferElementType type)
 {
     switch (type)
     {
@@ -63,6 +63,7 @@ static usize BufferElementComponentCount(const BufferElementType type)
 struct VertexBufferElement
 {
     BufferElementType Type;
+    u32 Offset;
     u32 Size;
     bool Normalized;
 
@@ -88,8 +89,20 @@ struct VertexBufferLayout
      */
     inline const std::vector<VertexBufferElement> GetElements() { return m_Elements; }
 
+    /**
+     * @brief Iterators. Needed for for loops.
+     * 
+     * @return std::vector<VertexBufferElement>::iterator 
+     */
+    std::vector<VertexBufferElement>::iterator begin() { return m_Elements.begin(); }
+    std::vector<VertexBufferElement>::iterator end() { return m_Elements.end(); }
+    std::vector<VertexBufferElement>::const_iterator begin() const { return m_Elements.begin(); }
+    std::vector<VertexBufferElement>::const_iterator end() const { return m_Elements.end(); }
+
+    u32 GetStride();
+
 private:
-    usize m_Stride;
+    u32 m_Stride = 0;
     std::vector<VertexBufferElement> m_Elements;
 };
 
@@ -120,14 +133,14 @@ public:
      * 
      * @return const VertexBufferLayout& 
      */
-    virtual const VertexBufferLayout& GetLayout();
+    virtual const VertexBufferLayout& GetLayout() = 0;
 
     /**
      * @brief Set the layout of this buffer.
      * 
      * @param layout 
      */
-    virtual void SetLayout(const VertexBufferLayout& layout);
+    virtual void SetLayout(const VertexBufferLayout& layout) = 0;
 
     /* Creation functions */
     /**

@@ -2,7 +2,7 @@
 #include "glad/gl.h"
 
 #include "gfx/buffer.h"
-#include "backend/gl/glbuffer.h"
+#include "gfx/vertexArray.h"
 
 #include "common/instrumentor.h"
 
@@ -99,30 +99,25 @@ int main(int argc, char const *argv[])
         1, 2, 3    // second triangle
     };
 
+    VertexBufferLayout layout;
+    layout.AddElement(BufferElementType::FLOAT3);
+
     Ref<VertexBuffer> vertexbuffer = VertexBuffer::Create(0);
     vertexbuffer->SetData(&vertices, sizeof(float) * 3 * 4);
+    vertexbuffer->SetLayout(layout);
 
     Ref<IndexBuffer> indexbuffer = IndexBuffer::Create(&indices, sizeof(unsigned) * 2 * 3);
 
-    unsigned int vbuf, ibuf, varr;
-    GLVertexBuffer* buf_internal = (GLVertexBuffer*)(vertexbuffer.get());
-    vbuf = buf_internal->m_glID;    // hacks
-    GLIndexBuffer *ibuf_internal = (GLIndexBuffer *)(indexbuffer.get());
-    ibuf = ibuf_internal->m_glID; // hacks
-    
-    glCreateVertexArrays(1, &varr);
-    glVertexArrayVertexBuffer(varr, 0, vbuf, 0, 3 * sizeof(float));
-    glVertexArrayElementBuffer(varr, ibuf);
+    Ref<VertexArray> vertexarray = VertexArray::Create();
+    vertexarray->SetIndexBuffer(indexbuffer);
+    vertexarray->AddVertexBuffer(vertexbuffer);
 
-    glEnableVertexArrayAttrib(varr, 0);
-    glVertexArrayAttribFormat(varr, 0, 3, GL_FLOAT, GL_FALSE, 0);
-    glVertexArrayAttribBinding(varr, 0, 0);
+    vertexarray->Bind();
 
     while(!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        glBindVertexArray(varr);
         glDrawElements(GL_TRIANGLES, 2 * 3, GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window);

@@ -33,9 +33,7 @@ GLVertexBuffer::~GLVertexBuffer()
 void GLVertexBuffer::SetData(const void* data, u32 data_size)
 {
     PROFILE_FUNCTION();
-
-    printf("%d\n", data_size);
-
+    
     if(m_glID != 0)
         // glNamedBufferStorage(m_glID, data_size, data, GL_DYNAMIC_STORAGE_BIT);
         glNamedBufferData(m_glID, data_size, data, GL_DYNAMIC_DRAW);
@@ -50,5 +48,6 @@ GLIndexBuffer::GLIndexBuffer(const void* data, u32 data_size)
 
 GLIndexBuffer::~GLIndexBuffer()
 {
+    PROFILE_FUNCTION();
     glDeleteBuffers(1, &m_glID);
 }

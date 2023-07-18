@@ -26,6 +26,9 @@ public:
      */
     virtual ~GLVertexBuffer();
 
+    virtual const VertexBufferLayout& GetLayout() override { return m_Layout; };
+    virtual void SetLayout(const VertexBufferLayout& layout) override { m_Layout = layout; };
+
     /**
      * @brief Set new data on the gpu.
      * 
@@ -36,6 +39,8 @@ public:
 
 // private:
     u32 m_glID;
+private:
+    VertexBufferLayout m_Layout;
 };
 
 class GLIndexBuffer : public IndexBuffer
