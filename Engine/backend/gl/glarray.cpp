@@ -39,16 +39,19 @@ GLVertexArray::~GLVertexArray()
 
 void GLVertexArray::Bind()
 {
+    PROFILE_FUNCTION();
     glBindVertexArray(m_glID);
 }
 
 void GLVertexArray::Unbind()
 {
+    PROFILE_FUNCTION();
     glBindVertexArray(0);
 }
 
 void GLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& buf)
 {
+    PROFILE_FUNCTION();
     Ref<GLVertexBuffer> vbuf = std::static_pointer_cast<GLVertexBuffer>(buf);
     VertexBufferLayout layout = vbuf->GetLayout();
     glVertexArrayVertexBuffer(m_glID, m_BufferCount, vbuf->m_glID, 0, layout.GetStride());

@@ -46,7 +46,7 @@ public:
 private:
     u32 m_glID;
 
-    u32 m_BufferCount;
+    u32 m_BufferCount = 0;
     std::vector<Ref<VertexBuffer>> m_Buffers;
 
     Ref<IndexBuffer> m_IndexBuffer;

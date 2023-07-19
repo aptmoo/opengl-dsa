@@ -11,8 +11,8 @@ project "App"
         "src/",
         "backend",
         "./",
-        "%{wks.location}/ext/glad/include",
-        "%{wks.location}/ext/"
+        "%{wks.location}/Dependencies/glad/include",
+        "%{wks.location}/Dependencies/"
     }
 
     -- Preprocessor

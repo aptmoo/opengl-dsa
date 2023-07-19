@@ -1,5 +1,5 @@
 workspace "opengl"
     configurations { "Debug", "Release" }
 
-include "ext"
+include "Dependencies"
 include "Engine"
