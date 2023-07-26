@@ -50,6 +50,11 @@ void message_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GL
 	std::cout << src_str << ", " << type_str << ", " << severity_str << ", " << id << ": " << message << '\n';
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
 int main(int argc, char const *argv[])
 {
     PROFILE_START("Test", "perf.json");
@@ -67,6 +72,8 @@ int main(int argc, char const *argv[])
 
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(message_callback, nullptr);
+
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // TODO: Do program pipelines still suck on NVidia?
     unsigned int vs, fs, pr;
@@ -116,6 +123,8 @@ int main(int argc, char const *argv[])
 
     vertexarray->Bind();
 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     while(!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -127,7 +136,6 @@ int main(int argc, char const *argv[])
     }
     
     glDeleteProgramPipelines(1, &pr);
-
 
     glfwTerminate();
 
