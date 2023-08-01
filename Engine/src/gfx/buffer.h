@@ -174,10 +174,15 @@ public:
     virtual ~IndexBuffer() = default;
 
     /* Virtual funcions */
-    // TODO: Do index buffers even need functions in DSA bindless opengl?
+    /**
+     * @brief Returns the amount of elements in this buffer.
+     * 
+     * @return u32 
+     */
+    virtual u32 GetElements() = 0;
 
     /* Creation functions */
-    static Ref<IndexBuffer> Create(const void* data, u32 data_size);
+    static Ref<IndexBuffer> Create(const void* data, u32 elements);
 };
 
 #endif

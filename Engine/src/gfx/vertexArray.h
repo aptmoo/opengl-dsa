@@ -1,5 +1,5 @@
-#ifndef VERTEXARRAY_H
-#define VERTEXARRAY_H
+#ifndef GFX_VERTEXARRAY_H
+#define GFX_VERTEXARRAY_H
 #include "common/types.h"
 
 #include "buffer.h"
@@ -45,6 +45,8 @@ public:
      * @param buf 
      */
     virtual void SetIndexBuffer(const Ref<IndexBuffer>& buf) = 0;
+
+    virtual Ref<IndexBuffer> GetIndexBuffer() = 0;
 
     static Ref<VertexArray> Create();
 };

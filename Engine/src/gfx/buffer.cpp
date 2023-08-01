@@ -33,8 +33,8 @@ Ref<VertexBuffer> VertexBuffer::Create(u32 prealloc_size)
     return MakeRef<GLVertexBuffer>(prealloc_size);
 }
 
-Ref<IndexBuffer> IndexBuffer::Create(const void* data, u32 data_size)
+Ref<IndexBuffer> IndexBuffer::Create(const void* data, u32 elements)
 {
     // TODO: Platform detection
-    return MakeRef<GLIndexBuffer>(data, data_size);
+    return MakeRef<GLIndexBuffer>(data, elements);
 }

@@ -3,6 +3,8 @@
 
 #include "gfx/buffer.h"
 #include "gfx/vertexArray.h"
+#include "gfx/shader.h"
+#include "gfx/renderer.h"
 
 #include "common/instrumentor.h"
 
@@ -75,8 +77,6 @@ int main(int argc, char const *argv[])
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // TODO: Do program pipelines still suck on NVidia?
-    unsigned int vs, fs, pr;
     const char* vs_source = 
     "#version 330 core\n"
     "layout(location = 0) in vec3 vPos;\n"
@@ -85,14 +85,9 @@ int main(int argc, char const *argv[])
     "#version 330 core\n"
     "out vec4 fragColor;\n"
     "void main(){ fragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f); }";
-
-    vs = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &vs_source);
-    fs = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &fs_source);
-    glCreateProgramPipelines(1, &pr);
-    glUseProgramStages(pr, GL_VERTEX_SHADER_BIT, vs);
-    glUseProgramStages(pr, GL_FRAGMENT_SHADER_BIT, fs);
-
-    glBindProgramPipeline(pr);
+    
+    Ref<Shader> shader = Shader::Create(vs_source, fs_source);
+    shader->Bind();
 
     float vertices[] = 
     {
@@ -115,7 +110,7 @@ int main(int argc, char const *argv[])
     vertexbuffer->SetData(&vertices, sizeof(float) * 3 * 4);
     vertexbuffer->SetLayout(layout);
 
-    Ref<IndexBuffer> indexbuffer = IndexBuffer::Create(&indices, sizeof(unsigned) * 2 * 3);
+    Ref<IndexBuffer> indexbuffer = IndexBuffer::Create(&indices, 2 * 3);
 
     Ref<VertexArray> vertexarray = VertexArray::Create();
     vertexarray->SetIndexBuffer(indexbuffer);
@@ -123,19 +118,23 @@ int main(int argc, char const *argv[])
 
     vertexarray->Bind();
 
+    Scope<Renderer> renderer = Renderer::Create();
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while(!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, 2 * 3, GL_UNSIGNED_INT, nullptr);
+        renderer->Begin();
+
+        renderer->Draw(shader, vertexarray);
+
+        renderer->End();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    
-    glDeleteProgramPipelines(1, &pr);
 
     glfwTerminate();
 

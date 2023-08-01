@@ -43,13 +43,16 @@ public:
      */
     virtual void SetIndexBuffer(const Ref<IndexBuffer> &buf) override;
 
+    virtual Ref<IndexBuffer> GetIndexBuffer() override { return m_IndexBuffer; };
+
 private:
     u32 m_glID;
 
     u32 m_BufferCount = 0;
     std::vector<Ref<VertexBuffer>> m_Buffers;
-
     Ref<IndexBuffer> m_IndexBuffer;
+
+    friend class DrawCallCompare;
 };
 
 #endif
