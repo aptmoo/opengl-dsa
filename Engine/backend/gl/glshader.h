@@ -32,6 +32,7 @@ private:
     static u32 CompileShader(const std::string& source, GLenum type);
 
     friend class DrawCallCompare;
+    friend class GLRenderer;
 };
 
 #endif

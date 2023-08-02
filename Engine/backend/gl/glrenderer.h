@@ -7,6 +7,10 @@
 
 #include <queue>
 
+/**
+ * @brief Struct that can be compared.
+ * 
+ */
 struct DrawCall
 {
     Ref<Shader> shader;
@@ -25,10 +29,16 @@ public:
         Ref<GLVertexArray> array_b = std::static_pointer_cast<GLVertexArray>(b.array);
         Ref<GLShader> shader_b = std::static_pointer_cast<GLShader>(b.shader);
 
-        return (shader_a->m_glID > shader_b->m_glID) && (array_a->m_glID > array_b->m_glID);
+        return (shader_a->m_glID > shader_b->m_glID) || (array_a->m_glID > array_b->m_glID);
     }
 };
 
+/**
+ * @brief Funny test renderer.
+ * This is a design meant to test out std::priority_queue for sorting draw calls.
+ * In a real production renderer you should compare material resource ids and mesh resource ids instead.
+ * 
+ */
 class GLRenderer : public Renderer
 {
 public:

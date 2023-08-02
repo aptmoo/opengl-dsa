@@ -53,6 +53,7 @@ private:
     Ref<IndexBuffer> m_IndexBuffer;
 
     friend class DrawCallCompare;
+    friend class GLRenderer;
 };
 
 #endif
