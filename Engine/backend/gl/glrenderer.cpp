@@ -1,42 +1,33 @@
 #include "glrenderer.h"
 #include "common/instrumentor.h"
 
-void GLRenderer::Begin()
+void GLRenderer::SetClearColor(float r, float g, float b, float a)
 {
-    PROFILE_FUNCTION();
-    /* Make sure the call queue is empty so calls added in between frames get ignored */
-    while(!m_CallQueue.empty())
-    {
-        m_CallQueue.pop();
-    }
+    glClearColor(r, g, b, a);
 }
 
-void GLRenderer::End()
+void GLRenderer::Clear()
 {
-    PROFILE_FUNCTION();
-    /* 0 is a valid opengl id. To avoid not binding the first time, we set the "current" to an ID that will probably never exist */
-    u32 currentShader = UINT32_MAX;
-    u32 currentArray = UINT32_MAX;
-    while(!m_CallQueue.empty())
-    {
-        const DrawCall& call = m_CallQueue.top();
-        Ref<GLVertexArray> array = std::static_pointer_cast<GLVertexArray>(call.array);
-        Ref<GLShader> shader = std::static_pointer_cast<GLShader>(call.shader);
-
-        if(currentShader != shader->m_glID)
-            shader->Bind();
-
-        if(currentArray != array->m_glID)
-            array->Bind();
-
-        glDrawElements(GL_TRIANGLES, call.array->GetIndexBuffer()->GetElements(), GL_UNSIGNED_INT, nullptr);
-
-        m_CallQueue.pop();
-    }
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 }
 
-void GLRenderer::Draw(const Ref<Shader> &shader, const Ref<VertexArray> array)
+void GLRenderer::Clear(float r, float g, float b, float a)
 {
-    PROFILE_FUNCTION();
-    m_CallQueue.emplace(shader, array);
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
+void GLRenderer::DrawIndexed(const Ref<VertexArray> &array)
+{
+    array->Bind();
+    glDrawElements(GL_TRIANGLES, array->GetIndexBuffer()->GetElements(), GL_UNSIGNED_INT, nullptr);
+}
+
+void GLRenderer::DrawIndexed(const Ref<VertexArray> &array, const Ref<IndexBuffer> &buffer)
+{
+    /* This is dumb, but OpenGL DSA has forced my hand. */
+    Ref<IndexBuffer> oldBuffer = array->GetIndexBuffer();
+    array->SetIndexBuffer(buffer);
+    glDrawElements(GL_TRIANGLES, buffer->GetElements(), GL_UNSIGNED_INT, nullptr);
+    array->SetIndexBuffer(oldBuffer);
+};

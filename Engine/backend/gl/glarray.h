@@ -52,7 +52,6 @@ private:
     std::vector<Ref<VertexBuffer>> m_Buffers;
     Ref<IndexBuffer> m_IndexBuffer;
 
-    friend class DrawCallCompare;
     friend class GLRenderer;
 };
 

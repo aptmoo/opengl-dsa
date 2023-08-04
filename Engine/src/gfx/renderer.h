@@ -14,31 +14,52 @@ public:
     virtual ~Renderer() = default;
 
     /**
-     * @brief Start rendering.
+     * @brief Sets a clear color.
      * 
+     * @param r 
+     * @param g 
+     * @param b 
+     * @param a 
      */
-    virtual void Begin() = 0;
+    virtual void SetClearColor(float r, float g, float b, float a) = 0;
 
     /**
-     * @brief Finish up drawing.
-     * Calling this is required on some platforms.
-     * 
+     * @brief Clear. Does not set a clear color.
+     *
      */
-    virtual void End() = 0;
+    virtual void Clear() = 0;
+
+    /**
+     * @brief Clear using a specific color.
+     * 
+     * @param r 
+     * @param g 
+     * @param b 
+     * @param a 
+     */
+    virtual void Clear(float r, float g, float b, float a) = 0;
     
     /**
-     * @brief Draw an vertex array using a shader.
+     * @brief Draw an vertex array.
      * 
-     * @param shader 
-     * @param array 
+     * @param array
      */
-    virtual void Draw(const Ref<Shader>& shader, const Ref<VertexArray> array) = 0;
+    virtual void DrawIndexed(const Ref<VertexArray>& array) = 0;
+
+    /**
+     * @brief Draw a vertex array, using a seperate index buffer.
+     * TODO: This should probably not exist?
+     * 
+     * @param array 
+     * @param buffer 
+     */
+    virtual void DrawIndexed(const Ref<VertexArray>& array, const Ref<IndexBuffer>& buffer) = 0;
 
     /* Creation functions */
     /**
      * @brief Create a renderer.
      * 
-     * @return Ref<Renderer> 
+     * @return Scope<Renderer> 
      */
     static Scope<Renderer> Create();
 };

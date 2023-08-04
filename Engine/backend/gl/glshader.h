@@ -28,10 +28,11 @@ private:
         GLenum type = GL_NONE;
     };
     std::unordered_map<std::string, UniformInfo> m_UniformCache;
-    
-    static u32 CompileShader(const std::string& source, GLenum type);
 
-    friend class DrawCallCompare;
+    i32 GetUniformLocation(const std::string &name);
+
+    static u32 CompileShader(const std::string &source, GLenum type);
+
     friend class GLRenderer;
 };
 

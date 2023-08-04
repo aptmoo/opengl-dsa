@@ -39,3 +39,4 @@ Makefile
 
 bin/app
 bin/textures/test.png
+bin-int/

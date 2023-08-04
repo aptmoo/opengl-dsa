@@ -124,13 +124,9 @@ int main(int argc, char const *argv[])
 
     while(!glfwWindowShouldClose(window))
     {
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        renderer->Clear();
 
-        renderer->Begin();
-
-        renderer->Draw(shader, vertexarray);
-
-        renderer->End();
+        renderer->DrawIndexed(vertexarray);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -57,6 +57,17 @@ void GLShader::Reflect()
     }
 }
 
+i32 GLShader::GetUniformLocation(const std::string& name)
+{
+    if(m_UniformCache.find(name) != m_UniformCache.end())
+    {
+        UniformInfo info = m_UniformCache.at(name);
+        return info.location;
+    }
+
+    return glGetUniformLocation(m_glID, name.c_str());
+}
+
 u32 GLShader::CompileShader(const std::string &source, GLenum type)
 {
     u32 id;
