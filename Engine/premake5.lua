@@ -12,6 +12,7 @@ project "App"
         "backend",
         "./",
         "%{wks.location}/Dependencies/glad/include",
+        "%{wks.location}/Dependencies/stb/",
         "%{wks.location}/Dependencies/"
     }
 
@@ -19,7 +20,7 @@ project "App"
     defines { "GLFW_INCLUDE_NONE" }
 
     -- Linker
-    links { "glad" }
+    links { "glad", "stb" }
 
     filter { "system:linux" }
         links { "glfw", "GL" }

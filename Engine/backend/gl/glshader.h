@@ -17,6 +17,15 @@ public:
     virtual void Unbind() override;
 
     virtual void Reflect() override;
+
+    virtual void SetInt(const std::string &name, int value) override;
+    virtual void SetFloat(const std::string &name, float value) override;
+
+    virtual void SetVec2(const std::string &name, glm::vec2 value) override {}; // TODO: implement
+    virtual void SetVec3(const std::string &name, glm::vec3 value) override {}; // TODO: implement
+    virtual void SetVec4(const std::string &name, glm::vec4 value) override {}; // TODO: implement
+
+    virtual void SetMat4(const std::string& name, glm::mat4 value) override;
 private:
     u32 m_glID;
 

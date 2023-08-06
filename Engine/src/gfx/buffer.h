@@ -5,7 +5,7 @@
 
 enum class BufferElementType
 {
-    NONE = 0, FLOAT, FLOAT2, FLOAT3, FLOAT4, INT, INT2, INT3, INT4, MAT4, BOOL
+    NONE = 0, FLOAT, FLOAT2, FLOAT3, FLOAT4, CHAR, UCHAR, BYTE, UBYTE, INT, INT2, INT3, INT4, UINT, MAT4, BOOL
 };
 
 /**
@@ -22,12 +22,17 @@ static u32 BufferElementTypeSize(const BufferElementType type)
     case BufferElementType::FLOAT2: return 4 * 2;
     case BufferElementType::FLOAT3: return 4 * 3;
     case BufferElementType::FLOAT4: return 4 * 4;
+    case BufferElementType::CHAR:   return 1;
+    case BufferElementType::UCHAR:  return 1;
+    case BufferElementType::BYTE:   return 1;
+    case BufferElementType::UBYTE:  return 1;
     case BufferElementType::INT:    return 4;
     case BufferElementType::INT2:   return 4 * 2;
     case BufferElementType::INT3:   return 4 * 3;
     case BufferElementType::INT4:   return 4 * 4;
+    case BufferElementType::UINT:   return 4;
     case BufferElementType::MAT4:   return 4 * 4 * 4;
-    case BufferElementType::BOOL:   return 4;   // Bools have the same size as ann uint.
+    case BufferElementType::BOOL:   return 4;   // Bools have the same size as an uint.
                                                 // TODO: GLSL supports bool vec types(bvecN). We should probably support that.
                                                 // TODO: Double precision types might also be nice.
     case BufferElementType::NONE:   return 0;
@@ -181,8 +186,10 @@ public:
      */
     virtual u32 GetElements() = 0;
 
+    virtual BufferElementType GetType() = 0;
+
     /* Creation functions */
-    static Ref<IndexBuffer> Create(const void* data, u32 elements);
+    static Ref<IndexBuffer> Create(const void* data, u32 elements, BufferElementType type);
 };
 
 #endif

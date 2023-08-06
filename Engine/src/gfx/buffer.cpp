@@ -9,7 +9,8 @@ void VertexBufferLayout::AddElement(BufferElementType type, bool normalized)
 u32 VertexBufferLayout::GetStride()
 {
     if(m_Stride != 0)
-        return 0;
+        return m_Stride;
+    
     u32 offset = 0;
     for(auto& element : m_Elements)
     {
@@ -17,7 +18,7 @@ u32 VertexBufferLayout::GetStride()
         offset += element.Size;
         m_Stride += element.Size;
     }
-    
+
     return m_Stride;
 }
 
@@ -33,8 +34,8 @@ Ref<VertexBuffer> VertexBuffer::Create(u32 prealloc_size)
     return MakeRef<GLVertexBuffer>(prealloc_size);
 }
 
-Ref<IndexBuffer> IndexBuffer::Create(const void* data, u32 elements)
+Ref<IndexBuffer> IndexBuffer::Create(const void* data, u32 elements, BufferElementType type)
 {
     // TODO: Platform detection
-    return MakeRef<GLIndexBuffer>(data, elements);
+    return MakeRef<GLIndexBuffer>(data, elements, type);
 }

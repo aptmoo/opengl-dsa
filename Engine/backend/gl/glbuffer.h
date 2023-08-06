@@ -53,14 +53,15 @@ public:
      * @param data 
      * @param elements
      */
-    GLIndexBuffer(const void* data, u32 elements);
+    GLIndexBuffer(const void* data, u32 elements, BufferElementType type);
 
     /**
-     * @brief See bas class.
+     * @brief See base class.
      * 
      * @return u32 
      */
     virtual u32 GetElements() override;
+    virtual BufferElementType GetType() override;
 
     /**
      * @brief Destructor. 
@@ -73,6 +74,8 @@ public:
     u32 m_glID;
 private:
     u32 m_Elements;
+    // Hacky way of doing this
+    BufferElementType m_Type;
 };
 
 #endif

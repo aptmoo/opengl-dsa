@@ -14,6 +14,8 @@ public:
     virtual void Clear() override;
     virtual void Clear(float r, float g, float b, float a) override;
 
+    virtual void SetDepthTest(bool value) override;
+
     virtual void DrawIndexed(const Ref<VertexArray> &array) override;
     virtual void DrawIndexed(const Ref<VertexArray> &array, const Ref<IndexBuffer> &buffer) override;
 };

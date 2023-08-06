@@ -39,17 +39,22 @@ void GLVertexBuffer::SetData(const void* data, u32 data_size)
         glNamedBufferData(m_glID, data_size, data, GL_DYNAMIC_DRAW);
 }
 
-GLIndexBuffer::GLIndexBuffer(const void* data, u32 elements)
-    : m_Elements(elements)
+GLIndexBuffer::GLIndexBuffer(const void* data, u32 elements, BufferElementType type)
+    : m_Elements(elements), m_Type(type)
 {
     PROFILE_FUNCTION();
     glCreateBuffers(1, &m_glID);
-    glNamedBufferStorage(m_glID, elements * sizeof(unsigned), data, GL_DYNAMIC_STORAGE_BIT);
+    glNamedBufferStorage(m_glID, elements * BufferElementTypeSize(type), data, GL_DYNAMIC_STORAGE_BIT);
 }
 
 u32 GLIndexBuffer::GetElements()
 {
     return m_Elements;
+}
+
+BufferElementType GLIndexBuffer::GetType()
+{
+    return m_Type;
 }
 
 GLIndexBuffer::~GLIndexBuffer()

@@ -2,6 +2,14 @@
 #define GL_ARRAY_H
 #include "gfx/vertexArray.h"
 
+/**
+ * @brief Helper function to be used by GLRenderer
+ * 
+ * @param type 
+ * @return unsigned
+ */
+unsigned BufferToGLType(const BufferElementType &type);
+
 class GLVertexArray : public VertexArray
 {
 public:

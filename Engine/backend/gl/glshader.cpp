@@ -1,9 +1,15 @@
 #include "glshader.h"
+#include "common/instrumentor.h"
+
 #include "glad/gl.h"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include <alloca.h>
 
 GLShader::GLShader(const std::string &vsource, const std::string &fsource)
 {
+    PROFILE_FUNCTION();
     u32 vs = CompileShader(vsource, GL_VERTEX_SHADER);
     u32 fs = CompileShader(fsource, GL_FRAGMENT_SHADER);
 
@@ -20,21 +26,25 @@ GLShader::GLShader(const std::string &vsource, const std::string &fsource)
 
 GLShader::~GLShader()
 {
+    PROFILE_FUNCTION();
     glDeleteProgram(m_glID);
 }
 
 void GLShader::Bind()
 {
+    PROFILE_FUNCTION();
     glUseProgram(m_glID);
 }
 
 void GLShader::Unbind()
 {
+    PROFILE_FUNCTION();
     glUseProgram(0);
 }
 
 void GLShader::Reflect()
 {
+    PROFILE_FUNCTION();
     glGetProgramiv(m_glID, GL_ACTIVE_UNIFORMS, &m_UniformCount);
     
     if(m_UniformCount == 0)
@@ -57,8 +67,24 @@ void GLShader::Reflect()
     }
 }
 
-i32 GLShader::GetUniformLocation(const std::string& name)
+void GLShader::SetInt(const std::string &name, int value)
 {
+    glUniform1i(GetUniformLocation(name), value);
+}
+
+void GLShader::SetFloat(const std::string& name, float value)
+{
+    glUniform1f(GetUniformLocation(name), value);
+}
+
+void GLShader::SetMat4(const std::string& name, glm::mat4 value)
+{
+    glUniformMatrix4fv(GetUniformLocation(name), 1, false, glm::value_ptr(value));
+}
+
+i32 GLShader::GetUniformLocation(const std::string &name)
+{
+    PROFILE_FUNCTION();
     if(m_UniformCache.find(name) != m_UniformCache.end())
     {
         UniformInfo info = m_UniformCache.at(name);
@@ -70,6 +96,7 @@ i32 GLShader::GetUniformLocation(const std::string& name)
 
 u32 GLShader::CompileShader(const std::string &source, GLenum type)
 {
+    PROFILE_FUNCTION();
     u32 id;
     id = glCreateShader(type);
 

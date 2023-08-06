@@ -45,3 +45,51 @@ project "glad"
         defines { "NDEBUG" }
         optimize "On"
     filter{}
+
+project "stb"
+    -- Input
+    files
+    {
+        "stb/**.h", "stb/**.c"
+    }
+
+    includedirs
+    {
+        "stb/"
+    }
+
+    -- Preprocessor
+    defines { }
+
+    -- Linker
+    links {  }
+
+    filter { "system:linux" }
+        links {  }
+        libdirs { "/usr/bin", "%{wks.location}/lib/" }
+    filter {}
+
+    -- Language
+    language    "C"
+    cdialect  "C99"
+
+    -- Compiler
+    filter { "system:linux" }
+        toolset "clang" 
+    filter {}
+
+    -- Output
+    targetdir   "%{wks.location}/lib"
+    objdir      "%{wks.location}/bin-int/"
+    kind        "StaticLib"
+
+    -- Config 
+    filter { "configurations:Debug" }
+        defines { "DEBUG" }
+        symbols "On"
+    filter{}
+
+    filter { "configurations:Release" }
+        defines { "NDEBUG" }
+        optimize "On"
+    filter{}
