@@ -92,15 +92,15 @@ int main(int argc, char const *argv[])
     unsigned int texture;
     glCreateTextures(GL_TEXTURE_2D, 1, &texture);
 
-    glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     stbi_set_flip_vertically_on_load(true);
 
     int texWidth, texHeight, texBPP;
-    unsigned char* data = stbi_load("textures/l.jpg", &texWidth, &texHeight, &texBPP, 4);
+    unsigned char* data = stbi_load("textures/private/test2.jpg", &texWidth, &texHeight, &texBPP, 4);
 
     glTextureStorage2D(texture, 1, GL_RGBA8, texWidth, texHeight);
     glTextureSubImage2D(texture, 0, 0, 0, texWidth, texHeight, GL_RGBA, GL_UNSIGNED_BYTE, data);

@@ -39,4 +39,5 @@ Makefile
 
 bin/app
 bin/textures/test.png
+bin/textures/private/*
 bin-int/
