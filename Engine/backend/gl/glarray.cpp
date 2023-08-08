@@ -60,7 +60,7 @@ void GLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& buf)
     PROFILE_FUNCTION();
     Ref<GLVertexBuffer> vbuf = std::static_pointer_cast<GLVertexBuffer>(buf);
     VertexBufferLayout layout = vbuf->GetLayout();
-    glVertexArrayVertexBuffer(m_glID, m_BufferCount, vbuf->m_glID, 0, layout.GetStride());
+    glVertexArrayVertexBuffer(m_glID, m_BufferCount, vbuf->GetGLID(), 0, layout.GetStride());
     u32 elementIndex = 0;
     
     for(const auto& element : layout)
@@ -79,7 +79,7 @@ void GLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& buf)
 {
     PROFILE_FUNCTION();
     Ref<GLIndexBuffer> ibuf = std::static_pointer_cast<GLIndexBuffer>(buf);
-    glVertexArrayElementBuffer(m_glID, ibuf->m_glID);
+    glVertexArrayElementBuffer(m_glID, ibuf->GetGLID());
 
     m_IndexBuffer = buf;
 }

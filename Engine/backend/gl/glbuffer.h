@@ -37,10 +37,11 @@ public:
      */
     virtual void SetData(const void* data, u32 data_size) override;
 
-// private:
-    /* TODO: Getter and setter func? */
-    u32 m_glID;
+    u32 GetGLID(){ return m_glID; };
+    const u32 GetGLID() const { return m_glID; };
+
 private:
+    u32 m_glID;
     VertexBufferLayout m_Layout;
 };
 
@@ -70,9 +71,11 @@ public:
      */
     virtual ~GLIndexBuffer();
     
-// private:
-    u32 m_glID;
+    u32 GetGlID() { return m_glID; };
+    const u32 GetGLID() const { return m_glID; };
+
 private:
+    u32 m_glID;
     u32 m_Elements;
     // Hacky way of doing this
     BufferElementType m_Type;
