@@ -1,6 +1,6 @@
 #include "GLFW/glfw3.h"
 #include "glad/gl.h"
-#include "stb_image.h"
+#include "stb/stb_image.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/glm.hpp"
@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
     stbi_set_flip_vertically_on_load(true);
 
     int texWidth, texHeight, texBPP;
-    unsigned char* data = stbi_load("textures/private/test2.jpg", &texWidth, &texHeight, &texBPP, 4);
+    unsigned char* data = stbi_load("textures/l.jpg", &texWidth, &texHeight, &texBPP, 4);
 
     Ref<Texture> texture = Texture::Create(data, texWidth, texHeight, ImageFormat::RGBA8, TextureWrapMode::REPEAT);
     texture->Bind(0);
@@ -155,7 +155,7 @@ int main(int argc, char const *argv[])
          1.0f,  1.0f, -1.0f,    1.0f, 0.0f, 0.5f, 1.0f,     0.0f, 1.0f
     };
 
-    std::vector<unsigned int> indices =
+    std::vector<unsigned char> indices =
     {
         0, 1, 2,  0, 2, 3,
         6, 5, 4,  7, 6, 4,
@@ -174,7 +174,7 @@ int main(int argc, char const *argv[])
     vertexbuffer->SetData(vertices.data(), sizeof(float) * vertices.size());
     vertexbuffer->SetLayout(layout);
 
-    Ref<IndexBuffer> indexbuffer = IndexBuffer::Create(indices.data(), indices.size(), BufferElementType::UINT);
+    Ref<IndexBuffer> indexbuffer = IndexBuffer::Create(indices.data(), indices.size(), BufferElementType::UCHAR);
     Ref<VertexArray> vertexarray = VertexArray::Create();
     vertexarray->SetIndexBuffer(indexbuffer);
     vertexarray->AddVertexBuffer(vertexbuffer);
