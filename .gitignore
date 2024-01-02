@@ -35,9 +35,6 @@
 *.make
 Makefile
 
-.vscode/
-
-bin/app
-bin/textures/test.png
-bin/textures/private/*
-bin-int/
+# Editor fluff
+.vscode
+.vscode/*

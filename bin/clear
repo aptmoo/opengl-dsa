@@ -1,4 +1,0 @@
-cd ..
-premake5 gmake
-make clean
-cd bin

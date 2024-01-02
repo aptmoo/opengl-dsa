@@ -1,95 +1,104 @@
+project "GLFW"
+    kind "StaticLib"
+    language "C"
+    targetdir "../lib/"
+    staticruntime "off"
+
+    files 
+    {
+        "glfw/src/**.c", "glfw/src/**.h",
+        "glfw/include/**.h"
+    }
+
+    includedirs
+    {
+        "./",
+        "glfw/include/",
+    }
+
+    links
+    {
+        
+    }
+
+    targetdir ("../lib/")
+    objdir ("../Intermediates/%{prj.name}")
+
+    filter "system:windows"
+        systemversion "latest"
+        defines { "_GLFW_WIN32" }
+
+    filter "system:linux"
+        defines { "_GLFW_X11" }
+        libdirs { "/usr/lib", "../lib", }
+        links { "dl", "m", "pthread" }
+
+    filter "configurations:Debug"
+        defines { "DEBUG" }
+        runtime "Debug"
+        symbols "On"
+
+    filter "configurations:Release"
+        defines { "RELEASE" }
+        runtime "Release"
+        optimize "On"
+        symbols "On"
+
+    filter "configurations:Dist"
+        defines { "DIST" }
+        runtime "Release"
+        optimize "On"
+        symbols "Off"
+
 project "glad"
-    -- Input
-    files
+    kind "StaticLib"
+    language "C"
+    targetdir "../lib/"
+    staticruntime "off"
+
+    files 
     {
-        "glad/**.h", "glad/**.c"
+        "glad/**.c", "glad/**.h"
     }
 
     includedirs
     {
-        "glad/include/"
+        "./",
+        "glad/include/",
+        "glad/include/glad",
+        "glad/include/KHR",
     }
 
-    -- Preprocessor
-    defines { }
-
-    -- Linker
-    links {  }
-
-    filter { "system:linux" }
-        links { "GL" }
-        libdirs { "/usr/bin", "%{wks.location}/lib/" }
-    filter {}
-
-    -- Language
-    language    "C"
-    cdialect  "C99"
-
-    -- Compiler
-    filter { "system:linux" }
-        toolset "clang" 
-    filter {}
-
-    -- Output
-    targetdir   "%{wks.location}/lib"
-    objdir      "%{wks.location}/bin-int/"
-    kind        "StaticLib"
-
-    -- Config 
-    filter { "configurations:Debug" }
-        defines { "DEBUG" }
-        symbols "On"
-    filter{}
-
-    filter { "configurations:Release" }
-        defines { "NDEBUG" }
-        optimize "On"
-    filter{}
-
-project "stb"
-    -- Input
-    files
+    links
     {
-        "stb/**.h", "stb/**.c"
+        "GL"
     }
 
-    includedirs
-    {
-        "stb/"
-    }
+    targetdir ("../lib/")
+    objdir ("../Intermediates/%{prj.name}")
 
-    -- Preprocessor
-    defines { }
+    filter "system:windows"
+        systemversion "latest"
+        defines { "_GLFW_WIN32" }
 
-    -- Linker
-    links {  }
+    filter "system:linux"
+        defines { "_GLFW_X11" }
+        libdirs { "/usr/lib", "../lib", }
+        links { "dl", "m", "pthread" }
 
-    filter { "system:linux" }
-        links {  }
-        libdirs { "/usr/bin", "%{wks.location}/lib/" }
-    filter {}
-
-    -- Language
-    language    "C"
-    cdialect  "C99"
-
-    -- Compiler
-    filter { "system:linux" }
-        toolset "clang" 
-    filter {}
-
-    -- Output
-    targetdir   "%{wks.location}/lib"
-    objdir      "%{wks.location}/bin-int/"
-    kind        "StaticLib"
-
-    -- Config 
-    filter { "configurations:Debug" }
+    filter "configurations:Debug"
         defines { "DEBUG" }
+        runtime "Debug"
         symbols "On"
-    filter{}
 
-    filter { "configurations:Release" }
-        defines { "NDEBUG" }
+    filter "configurations:Release"
+        defines { "RELEASE" }
+        runtime "Release"
         optimize "On"
-    filter{}
+        symbols "On"
+
+    filter "configurations:Dist"
+        defines { "DIST" }
+        runtime "Release"
+        optimize "On"
+        symbols "Off"
