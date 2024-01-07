@@ -6,6 +6,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "stb_image.h"
 
+#include "glimpl/glshader.h"
+
 #include <vector>
 #include <iostream>
 
@@ -54,8 +56,6 @@ void GLMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, G
 static struct
 {
     glm::mat4 view, projection, model;
-
-    unsigned int vs, fs, pr;
     unsigned int vao, ibo, vbo;
 
     unsigned int transformLoc;
@@ -133,14 +133,7 @@ int main(int argc, char const *argv[])
     "out vec4 FragColor;\n"
     "void main(){FragColor = vec4(vertexColor, 1.0) * texture(sTexture, texCoord);}\n";
 
-    state.vs = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &vertexSource);
-    state.fs = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &fragmentSource);
-    glCreateProgramPipelines(1, &state.pr);
-    glUseProgramStages(state.pr, GL_VERTEX_SHADER_BIT, state.vs);
-    glUseProgramStages(state.pr, GL_FRAGMENT_SHADER_BIT, state.fs);
-
-    glBindProgramPipeline(state.pr);
-    glProgramUniform1i(state.fs, glGetUniformLocation(state.fs, "sTexture"), 0);
+    GLShader shader(vertexSource, fragmentSource);
 
     /* Textures */
     unsigned int tex, tex2;
@@ -245,14 +238,14 @@ int main(int argc, char const *argv[])
     state.model = glm::rotate(glm::mat4(1.0f), glm::radians(25.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     state.view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));
     state.projection = glm::perspective(glm::radians(45.0f), (float)state.width / (float)state.height, 0.1f, 100.0f);
-    state.transformLoc = glGetUniformLocation(state.vs, "transform");
 
     /* Main loop */
     while (!glfwWindowShouldClose(window))
     {
         glm::mat4 transform = state.projection * state.view * state.model;
-        glBindProgramPipeline(state.pr);
-        glProgramUniformMatrix4fv(state.vs, state.transformLoc, 1, GL_FALSE, &transform[0][0]);
+        shader.Bind();
+        shader.SetInt("sTexture", 0);
+        shader.SetMat4("transform", state.projection * state.view * state.model);
 
         glBindVertexArray(state.vao);
 
@@ -266,12 +259,7 @@ int main(int argc, char const *argv[])
     glDeleteVertexArrays(1, &state.vao);
     glDeleteBuffers(1, &state.vbo);
     glDeleteBuffers(1, &state.ibo);
-
-    glDeleteProgram(state.vs);
-    glDeleteProgram(state.fs);
-    glDeleteProgramPipelines(1, &state.pr);
     
-
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
