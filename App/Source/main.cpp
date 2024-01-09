@@ -239,7 +239,7 @@ int main(int argc, char const *argv[])
         glm::mat4 transform = state.projection * state.view * state.model;
         shader->Bind();
         shader->SetInt("sTexture", 0);
-        shader->SetMat4("transform", state.projection * state.view * state.model);
+        shader->SetMat4("transform", transform);
 
         glBindVertexArray(state.vao);
 

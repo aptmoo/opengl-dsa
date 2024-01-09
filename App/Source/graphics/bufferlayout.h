@@ -46,6 +46,7 @@ struct BufferElement
 class BufferLayout
 {
 public:
+    BufferLayout(){};
     BufferLayout(std::initializer_list<BufferElement> elements)
         : m_Elements(elements)
     {
