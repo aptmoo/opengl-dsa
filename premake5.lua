@@ -4,4 +4,4 @@ workspace "opengl"
     startproject "App"
 
 include "Dependencies"
-include "Source"
+include "App"

@@ -5,11 +5,19 @@ project "App"
     targetdir "Binaries/"
     staticruntime "off"
 
-    files { "./**.h", "./**.cpp" }
+    files
+    {
+        "./Source/**.h", "./Source/**.cpp",
+        "./Vendor/**.h", "./Vendor/**.cpp",
+        "./Backend/gl/**.h", "./Backend/gl/**.cpp"
+    }
 
     includedirs
     {
         "./",
+        "./Source/",
+        "./Vendor/",
+        "./Backend/",
         "../Dependencies/GLFW/include",
         "../Dependencies/glad/include",
         "../Dependencies/glm/"
@@ -30,6 +38,7 @@ project "App"
     filter "system:linux"
         defines { "PLATFORM_LINUX" }
         libdirs { "/usr/lib", "../lib", }
+        files { "Backend/linux/**.h", "Backend/**.cpp" }
         links { "dl", "m", "pthread", "GL" }
         targetname "App.out"
 

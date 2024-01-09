@@ -1,6 +1,6 @@
 #ifndef GLSHADER_H
 #define GLSHADER_H
-#include "shader.h"
+#include "graphics/shader.h"
 #include <unordered_map>
 
 class GLShader : public Shader

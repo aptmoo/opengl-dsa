@@ -6,7 +6,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "stb_image.h"
 
-#include "glimpl/glshader.h"
+#include "graphics/shader.h"
+#include "graphics/device.h"
 
 #include <vector>
 #include <iostream>
@@ -82,7 +83,6 @@ int main(int argc, char const *argv[])
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Title!", nullptr, nullptr);
     state.width = 1280;
     state.height = 720;
-    glfwMakeContextCurrent(window);
     if(!window)
     {
         std::cout << "Failed to create a glfw window.\n";
@@ -90,14 +90,8 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    /* Init GL */
-    if(!gladLoadGL(glfwGetProcAddress))
-    {
-        std::cout << "Failed to init glad!\n";
-        glfwTerminate();
-        return -1;
-    }
-    std::cout << glGetString(GL_VERSION) << '\n';
+    std::unique_ptr<GraphicsDevice> device = GraphicsDevice::Create(window);
+    device->Init();
 
     glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
     {
@@ -133,7 +127,7 @@ int main(int argc, char const *argv[])
     "out vec4 FragColor;\n"
     "void main(){FragColor = vec4(vertexColor, 1.0) * texture(sTexture, texCoord);}\n";
 
-    GLShader shader(vertexSource, fragmentSource);
+    std::shared_ptr<Shader> shader = Shader::Create(vertexSource, fragmentSource);
 
     /* Textures */
     unsigned int tex, tex2;
@@ -211,7 +205,7 @@ int main(int argc, char const *argv[])
     };  
 
     glCreateBuffers(1, &state.vbo);
-    glNamedBufferData(state.vbo, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+    glNamedBufferStorage(state.vbo, vertices.size() * sizeof(float), vertices.data(), GL_DYNAMIC_STORAGE_BIT);
 
     glCreateBuffers(1, &state.ibo);
     glNamedBufferData(state.ibo, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW);
@@ -243,9 +237,9 @@ int main(int argc, char const *argv[])
     while (!glfwWindowShouldClose(window))
     {
         glm::mat4 transform = state.projection * state.view * state.model;
-        shader.Bind();
-        shader.SetInt("sTexture", 0);
-        shader.SetMat4("transform", state.projection * state.view * state.model);
+        shader->Bind();
+        shader->SetInt("sTexture", 0);
+        shader->SetMat4("transform", state.projection * state.view * state.model);
 
         glBindVertexArray(state.vao);
 
