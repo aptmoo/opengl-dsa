@@ -16,6 +16,8 @@ size_t BufferElementTypeSize(BufferElementType type)
         case BufferElementType::INT3:       return 4 * 3;
         case BufferElementType::INT4:       return 4 * 4;
 
+        case BufferElementType::UINT:       return 4;
+
         case BufferElementType::MAT4:       return 4 * 4 * 4;
 
         case BufferElementType::BOOL:       return 1;
@@ -42,6 +44,8 @@ size_t BufferElementTypeComponents(BufferElementType type)
         case BufferElementType::INT2:       return 2;
         case BufferElementType::INT3:       return 3;
         case BufferElementType::INT4:       return 4;
+
+        case BufferElementType::UINT:       return 4;
 
         case BufferElementType::MAT4:       return 4 * 4;
 

@@ -8,6 +8,9 @@
 
 #include "graphics/shader.h"
 #include "graphics/device.h"
+#include "graphics/bufferlayout.h"
+#include "graphics/buffer.h"
+#include "graphics/array.h"
 
 #include <vector>
 #include <iostream>
@@ -92,6 +95,7 @@ int main(int argc, char const *argv[])
 
     std::unique_ptr<GraphicsDevice> device = GraphicsDevice::Create(window);
     device->Init();
+    device->SetDepthTest(true);
 
     glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
     {
@@ -204,29 +208,19 @@ int main(int argc, char const *argv[])
         22, 21, 20,  23, 22, 20
     };  
 
-    glCreateBuffers(1, &state.vbo);
-    glNamedBufferStorage(state.vbo, vertices.size() * sizeof(float), vertices.data(), GL_DYNAMIC_STORAGE_BIT);
-
-    glCreateBuffers(1, &state.ibo);
-    glNamedBufferData(state.ibo, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW);
-
-    glCreateVertexArrays(1, &state.vao);
-    glVertexArrayVertexBuffer(state.vao, 0, state.vbo, 0, 9 * sizeof(float));
-    glVertexArrayElementBuffer(state.vao, state.ibo);
-
-    glEnableVertexArrayAttrib(state.vao, 0);
-    glVertexArrayAttribFormat(state.vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
-    glVertexArrayAttribBinding(state.vao, 0, 0);
-
-    glEnableVertexArrayAttrib(state.vao, 1);
-    glVertexArrayAttribFormat(state.vao, 1, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(float));
-    glVertexArrayAttribBinding(state.vao, 1, 0);
-
-    glEnableVertexArrayAttrib(state.vao, 2);
-    glVertexArrayAttribFormat(state.vao, 2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float));
-    glVertexArrayAttribBinding(state.vao, 2, 0);
-
-    glBindVertexArray(state.vbo);
+    BufferLayout layout = 
+    {
+        {BufferElementType::FLOAT3, "aPos"},
+        {BufferElementType::FLOAT4, "vColor"},
+        {BufferElementType::FLOAT2, "uv0"},
+    };
+                                                                                            // lmaoooooo
+    std::shared_ptr<VertexBuffer> vbuffer = VertexBuffer::Create(layout, vertices.data(), sizeof(float) * vertices.size());
+    std::shared_ptr<IndexBuffer> ibuffer = IndexBuffer::Create(BufferElementType::UINT, indices.data(), indices.size());
+    std::shared_ptr<VertexArray> varray = VertexArray::Create();
+    varray->AddVertexBuffer(vbuffer);
+    varray->SetIndexBuffer(ibuffer);
+    varray->Bind();
 
     /* Transform */
     state.model = glm::rotate(glm::mat4(1.0f), glm::radians(25.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -241,9 +235,9 @@ int main(int argc, char const *argv[])
         shader->SetInt("sTexture", 0);
         shader->SetMat4("transform", transform);
 
-        glBindVertexArray(state.vao);
+        varray->Bind();
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 
         glfwPollEvents();

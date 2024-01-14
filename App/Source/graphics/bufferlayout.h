@@ -9,6 +9,7 @@ enum class BufferElementType : uint32_t
     _DEFAULT = 0,
     FLOAT, FLOAT2, FLOAT3, FLOAT4,
     INT, INT2, INT3, INT4,
+    UINT,
     CHAR,
     BOOL,
     MAT4,
@@ -34,11 +35,13 @@ struct BufferElement
 {
     std::string Name;
     size_t Size;
+    size_t Components;
     size_t Offset;
+    BufferElementType Type;
     bool Normalized;
 
     BufferElement(BufferElementType type, const std::string& name, bool normalized = false)
-        : Name(name), Size(BufferElementTypeSize(type)), Normalized(normalized){};
+        : Name(name), Size(BufferElementTypeSize(type)), Components(BufferElementTypeComponents(type)), Type(type), Normalized(normalized){};
     
     BufferElement() = default;
 };
@@ -81,11 +84,11 @@ private:
     void CalculateStrideAndOffset()
     {
         m_Stride = 0;
-        size_t offset;
+        size_t offset = 0;
         for(BufferElement& element : m_Elements)
         {
             element.Offset = offset;
-            offset+= element.Size;
+            offset += element.Size;
             m_Stride += element.Size;
         }
     }
