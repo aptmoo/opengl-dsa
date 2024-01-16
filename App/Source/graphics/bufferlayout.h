@@ -9,10 +9,11 @@ enum class BufferElementType : uint32_t
     _DEFAULT = 0,
     FLOAT, FLOAT2, FLOAT3, FLOAT4,
     INT, INT2, INT3, INT4,
-    UINT,
+    UINT,   // TODO: uint vecs
     CHAR,
     BOOL,
     MAT4,
+    // TODO: add more types
 };
 
 /**
@@ -46,6 +47,11 @@ struct BufferElement
     BufferElement() = default;
 };
 
+/**
+ * @brief A convenient interface for buffer layouts of all kinds.
+ * @warning Please refrain from using mat4 types in a layout. It returns GL_INVALID_ENUM when converted to a gl type.
+ * 
+ */
 class BufferLayout
 {
 public:
@@ -56,8 +62,10 @@ public:
         CalculateStrideAndOffset();
     }
 
+    // TODO: add AddElement function.
+
     /**
-     * @brief Returns the stride of this layout.
+     * @brief Returns the stride(total size) of this layout.
      * 
      * @return size_t 
      */
